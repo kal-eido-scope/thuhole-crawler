@@ -61,17 +61,14 @@ def main():
         if 'data' in post:
             urls += [item['url'] for item in post['data'] if item['url']]
         for url in tqdm(urls, desc='Images', leave=False):
-            try:
-                image_path = os.path.join(DATA_PATH, 'images', url)
-                if os.path.isfile(image_path):
-                    continue
-                tqdm.write('Request image %s' % url)
-                os.makedirs(os.path.dirname(image_path), exist_ok=True)
-                r = s.get('https://i.thuhole.com/' + url)
-                with open(image_path, 'wb') as f:
-                    f.write(r.content)
-            except:
-                pass
+            image_path = os.path.join(DATA_PATH, 'images', url)
+            if os.path.isfile(image_path):
+                continue
+            tqdm.write('Request image %s' % url)
+            os.makedirs(os.path.dirname(image_path), exist_ok=True)
+            r = s.get('https://i.thuhole.com/' + url)
+            with open(image_path, 'wb') as f:
+                f.write(r.content)
 
 
 if __name__ == '__main__':
