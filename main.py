@@ -42,7 +42,8 @@ def main():
         token = args.token
     for i in tqdm(range(args.start, args.end), desc='Posts'):
         # Test for existence
-        post_path = os.path.join(DATA_PATH, '%06d.json' % i)
+        post_path = os.path.join(DATA_PATH, 'json', '%06d.json' % i)
+        os.makedirs(os.path.dirname(post_path), exist_ok=True)
         if not os.path.isfile(post_path):
             tqdm.write('Request post %d' % i)
             r = s.get('https://tapi.thuhole.com/v3/contents/post/detail?pid=%d&device=0&v=v3.0.6-455336' % i, headers={
@@ -62,7 +63,7 @@ def main():
         if 'data' in post:
             urls += [item['url'] for item in post['data'] if item['url']]
         for url in tqdm(urls, desc='Images', leave=False):
-            image_path = os.path.join(DATA_PATH, '%06d' % i, 'images', url)
+            image_path = os.path.join(DATA_PATH, 'images', url)
             if os.path.isfile(image_path):
                 continue
             tqdm.write('Request image %s' % url)
