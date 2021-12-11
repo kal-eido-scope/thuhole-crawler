@@ -1,6 +1,6 @@
 ## 首次Clone后
 
-你需要按照依赖。
+你需要安装依赖。
 
 ```bash
 git clone --single-branch --branch master git@github.com:sunziping2016/thuhole-crawler.git
