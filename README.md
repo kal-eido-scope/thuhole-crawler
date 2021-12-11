@@ -16,6 +16,7 @@ pip install -r requirements.txt
 然后运行：
 
 ```bash
+git checkout master
 git checkout -b <start>-<end>
 python ./main.py --email example@mails.tsinghua.edu.cn --password some_password --start <start> --end <end>
 ```
