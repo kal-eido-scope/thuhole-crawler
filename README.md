@@ -3,6 +3,8 @@
 你需要按照依赖。
 
 ```bash
+git clone --single-branch --branch master git@github.com:sunziping2016/thuhole-crawler.git
+cd thuhole-crawler
 # After clone the repo and cd to the root...
 pip install -r requirements.txt
 ```
@@ -32,7 +34,7 @@ python ./main.py --token some_token --start <start> --end <end>
 ```bash
 git add .
 git commit -m 'crawled <start>-<end> #<issue-id>'
-git push
+git push -u origin <start>-<end>
 ```
 
 这里的commit信息只是个推荐。只是方便管理。随后你可以关闭issue，标志了区间爬取的完成。
