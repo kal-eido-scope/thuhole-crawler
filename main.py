@@ -48,7 +48,8 @@ def main():
                 'TOKEN': token,
             })
             post = r.json()
-            assert post['code'] == 0 or post['msg'].startswith('找不到这条树洞'), 'Unknown error'
+            if post['code'] != 0 and not post['msg'].startswith('找不到这条树洞'):
+                raise RuntimeError(post['msg'])
             with open(post_path, 'wb') as f:
                 f.write(r.content)
             time.sleep(sleep)
