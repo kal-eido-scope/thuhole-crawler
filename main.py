@@ -39,41 +39,37 @@ def main():
         token = r['token']
     else:
         token = args.token
-    for _ in tqdm(range(5), desc="Trial"):
-        for i in tqdm(range(args.start, args.end), desc='Posts'):
+    for i in tqdm(range(args.start, args.end), desc='Posts'):
+        post_path = os.path.join(DATA_PATH, 'json', '%06d.json' % i)
+        os.makedirs(os.path.dirname(post_path), exist_ok=True)
+        if not os.path.isfile(post_path):
+            tqdm.write('Request post %d' % i)
+            r = s.get('https://tapi.thuhole.com/v3/contents/post/detail?pid=%d&device=0&v=v3.0.6-455336' % i, headers={
+                'TOKEN': token,
+            })
+            post = r.json()
+            assert post['code'] == 0 or post['msg'].startswith('找不到这条树洞'), 'Unknown error'
+            with open(post_path, 'wb') as f:
+                f.write(r.content)
+            time.sleep(sleep)
+        else:
+            with open(post_path) as f:
+                post = json.load(f)
+        urls = []
+        if 'post' in post and post['post']['url']:
+            urls.append(post['post']['url'])
+        if 'data' in post:
+            urls += [item['url'] for item in post['data'] if item['url']]
+        for url in tqdm(urls, desc='Images', leave=False):
             try:
-                post_path = os.path.join(DATA_PATH, 'json', '%06d.json' % i)
-                os.makedirs(os.path.dirname(post_path), exist_ok=True)
-                if not os.path.isfile(post_path):
-                    tqdm.write('Request post %d' % i)
-                    r = s.get('https://tapi.thuhole.com/v3/contents/post/detail?pid=%d&device=0&v=v3.0.6-455336' % i, headers={
-                        'TOKEN': token,
-                    })
-                    post = r.json()
-                    assert post['code'] == 0 or post['msg'].startswith('找不到这条树洞'), 'Unknown error'
-                    with open(post_path, 'wb') as f:
-                        f.write(r.content)
-                    time.sleep(sleep)
-                else:
-                    with open(post_path) as f:
-                        post = json.load(f)
-                urls = []
-                if 'post' in post and post['post']['url']:
-                    urls.append(post['post']['url'])
-                if 'data' in post:
-                    urls += [item['url'] for item in post['data'] if item['url']]
-                for url in tqdm(urls, desc='Images', leave=False):
-                    try:
-                        image_path = os.path.join(DATA_PATH, 'images', url)
-                        if os.path.isfile(image_path):
-                            continue
-                        tqdm.write('Request image %s' % url)
-                        os.makedirs(os.path.dirname(image_path), exist_ok=True)
-                        r = s.get('https://i.thuhole.com/' + url)
-                        with open(image_path, 'wb') as f:
-                            f.write(r.content)
-                    except:
-                        pass
+                image_path = os.path.join(DATA_PATH, 'images', url)
+                if os.path.isfile(image_path):
+                    continue
+                tqdm.write('Request image %s' % url)
+                os.makedirs(os.path.dirname(image_path), exist_ok=True)
+                r = s.get('https://i.thuhole.com/' + url)
+                with open(image_path, 'wb') as f:
+                    f.write(r.content)
             except:
                 pass
 
