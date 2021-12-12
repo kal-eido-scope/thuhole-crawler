@@ -54,7 +54,7 @@ def main():
                 f.write(r.content)
             time.sleep(sleep)
         else:
-            with open(post_path) as f:
+            with open(post_path,encoding='utf-8') as f:
                 post = json.load(f)
         urls = []
         if 'post' in post and post['post']['url']:
