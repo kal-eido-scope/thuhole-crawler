@@ -39,6 +39,8 @@ def main():
         token = r['token']
     else:
         token = args.token
+    num_list = []
+    enumerate(num_list) 
     for i in tqdm(range(args.start, args.end), desc='Posts'):
         post_path = os.path.join(DATA_PATH, 'json', '%06d.json' % i)
         os.makedirs(os.path.dirname(post_path), exist_ok=True)
